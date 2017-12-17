@@ -5,6 +5,11 @@ import string
 number_of_logins = 0 # This shows the number of remebered logins
 logins = {}
 
+window = tkinter.Tk()
+window.title("Network login")
+window.geometry("400x250")
+
+# This section handles putting the entires in login.txt into the logins dictionary
 with open("login.txt", "r") as read:
 	lines = read.readlines()
 lines = list(map(lambda line: line.rstrip(), lines))
@@ -14,10 +19,12 @@ print (lines)
 for line in lines:
 	logins[line[0]] = line[1]
 print(logins)
+number_of_logins = len(logins)
 
-window = tkinter.Tk()
-window.title("Network login")
-window.geometry("400x250")
+login_number = 0
+for ssid in logins:
+	login_number += 1
+	exec("lbl_login" + str(login_number) + " = tkinter.Label(window, text = ssid)")
 
 def exit(self):
 	self.root.destroy()
@@ -37,25 +44,9 @@ lbl_password = tkinter.Label(window, text = "Please enter the network password")
 ent_password = tkinter.Entry(window)
 lbl_logins = tkinter.Label(window, text = "Remebered logins:")
 
-for button_n in range(1, number_of_logins + 1):
-	pass
-
-
 def network_connect(ssid, password):
 	os.system("networksetup -setairportnetwork en0 \"" + ssid + "\" " + password)
 	lbl_welcome.configure(text = "Connecting...")
-
-
-# Initalisation of objects with pre-defined functions
-btn_connect = tkinter.Button(window, text = "Connect", command = lambda ssid=ent_ssid.get(): network_connect(ssid, ent_password.get())) # I use a lambda function as if I don't, the function will run when the program runs.
-
-lbl_welcome.pack()
-lbl_ssid.pack()
-ent_ssid.pack()
-lbl_password.pack()
-ent_password.pack()
-btn_connect.pack()
-lbl_logins.pack()
 
 def add_login():
 	
@@ -92,7 +83,20 @@ def add_login():
 	
 	addLogin.mainloop()
 
+# Initalisation of objects with pre-defined functions
+btn_connect = tkinter.Button(window, text = "Connect", command = lambda ssid=ent_ssid.get(): network_connect(ssid, ent_password.get())) # I use a lambda function as if I don't, the function will run when the program runs.
 btn_add_login = tkinter.Button(window, text = "Add login", command = add_login)
+
+lbl_welcome.pack()
+lbl_ssid.pack()
+ent_ssid.pack()
+lbl_password.pack()
+ent_password.pack()
+btn_connect.pack()
+lbl_logins.pack()
+
+for n in range(1, number_of_logins + 1):
+	exec("lbl_login" + str(n) + ".pack()")
 
 btn_add_login.pack()
 
